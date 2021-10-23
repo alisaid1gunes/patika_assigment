@@ -11,6 +11,11 @@ const userSchema = new mongoose.Schema({
     type: String,
     require: true,
   },
+  password: {
+    type: String,
+    require: true,
+    max: 8,
+  },
 });
 
 userSchema.set('timestamps', true);
