@@ -1,9 +1,11 @@
 const mongoose = require('mongoose');
 
+const { ObjectId } = mongoose.Schema.Types;
+
 const contentSchema = new mongoose.Schema({
-  lessonBody: {
-    type: String,
-    require: true,
+  lessonId: {
+    type: ObjectId,
+    ref: 'Lesson',
   },
 });
 
