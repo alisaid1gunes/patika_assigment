@@ -101,8 +101,6 @@ const scoreValidationSave = (data) => {
   const scoreSchema = Joi.object({
     userId: Joi.objectId().required(),
     totalPoints: Joi.number().required(),
-    lastVisitedLesson: Joi.objectId().required(),
-    lastCompletedLesson: Joi.objectId().required(),
     history: Joi.array()
       .items({
         point: Joi.number().required(),
@@ -120,9 +118,11 @@ const scoreValidationUpdate = (data) => {
   const scoreSchema = Joi.object({
     userId: Joi.objectId(),
     courseId: Joi.objectId(),
-    lastVisitedLesson: Joi.objectId(),
-    lastCompletedLesson: Joi.objectId(),
-    completedLessons: Joi.array().items({
+    totalPoints: Joi.number(),
+    history: Joi.array().items({
+      point: Joi.number(),
+      date: Joi.date(),
+      courseId: Joi.objectId(),
       lessonId: Joi.objectId(),
     }),
   });
