@@ -16,6 +16,8 @@ const token = require('./routes/token');
 
 const course = require('./routes/course');
 
+const lesson = require('./routes/lesson');
+
 dotenv.config();
 
 mongoose
@@ -40,3 +42,5 @@ app.use('/api/auth', auth);
 app.use('/api/', token);
 
 app.use('/api/course', course);
+
+app.use('/api/lesson', lesson);
