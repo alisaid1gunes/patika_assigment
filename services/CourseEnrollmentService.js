@@ -115,6 +115,7 @@ class CourseEnrollmentService {
             date: new Date(),
             courseId: bodyIn.courseId,
           });
+          await this.mongooseScore.updateWithUser(bodyIn.userId, score);
         }
       }
       const result = await this.mongooseCourseEnrollment.update(id, bodyIn);
