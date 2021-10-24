@@ -73,6 +73,7 @@ const courseEnrollmentValidationSave = (data) => {
     courseId: Joi.objectId().required(),
     lastVisitedLesson: Joi.objectId().required(),
     lastCompletedLesson: Joi.objectId().required(),
+    isCourseCompleted: Joi.boolean().required(),
     completedLessons: Joi.array()
       .items({
         lessonId: Joi.objectId(),
@@ -89,6 +90,7 @@ const courseEnrollmentValidationUpdate = (data) => {
     courseId: Joi.objectId(),
     lastVisitedLesson: Joi.objectId(),
     lastCompletedLesson: Joi.objectId(),
+    isCourseCompleted: Joi.boolean(),
     completedLessons: Joi.array().items({
       lessonId: Joi.objectId(),
     }),
