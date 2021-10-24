@@ -21,6 +21,11 @@ const CourseEnrollmentSchema = new mongoose.Schema({
     ref: 'Course',
     require: true,
   },
+  isCourseCompleted: {
+    type: Boolean,
+    default: false,
+    required: true,
+  },
   lastVisitedLesson: {
     type: ObjectId,
     ref: 'Lesson',
