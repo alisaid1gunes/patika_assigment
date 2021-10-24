@@ -88,6 +88,7 @@ const courseEnrollmentValidationUpdate = (data) => {
   const courseEnrollmentSchema = Joi.object({
     userId: Joi.objectId(),
     courseId: Joi.objectId(),
+    isALessonCompleted: Joi.boolean().required(),
     lastVisitedLesson: Joi.objectId(),
     lastCompletedLesson: Joi.objectId(),
     isCourseCompleted: Joi.boolean(),

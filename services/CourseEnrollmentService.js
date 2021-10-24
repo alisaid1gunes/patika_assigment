@@ -84,21 +84,37 @@ class CourseEnrollmentService {
     try {
       const { error } = courseEnrollmentValidationUpdate(bodyIn);
       if (error) return error.details[0].message;
+
+      let score = await this.mongooseScore.get({ userId: bodyIn.userId });
+      if (score == null) {
+        score = await this.mongooseScore.save({
+          userId: bodyIn.userId,
+          totalPoints: 0,
+          history: [{ point: 0, date: new Date(), courseId: bodyIn.courseId }],
+        });
+      }
+
       if ((bodyIn.isCourseCompleted = !null)) {
         if (bodyIn.isCourseCompleted) {
-          let score = await this.mongooseScore.get({ userId: bodyIn.userId });
-          if (score == null) {
-            score = await this.mongooseScore.save({
-              userId: bodyIn.userId,
-              totalPoints: 0,
-              history: [
-                { point: 0, date: new Date(), courseId: bodyIn.courseId },
-              ],
-            });
-          }
           console.log(score);
           score.totalPoints += 10;
+          score.history.push({
+            point: 10,
+            date: new Date(),
+            courseId: bodyIn.courseId,
+          });
           await this.mongooseScore.updateWithUser(bodyIn.userId, score);
+        }
+      }
+
+      if (bodyIn.isALessonCompleted != null) {
+        if (bodyIn.isALessonCompleted) {
+          score.totalPoints += 1;
+          score.history.push({
+            point: 1,
+            date: new Date(),
+            courseId: bodyIn.courseId,
+          });
         }
       }
       const result = await this.mongooseCourseEnrollment.update(id, bodyIn);
