@@ -11,84 +11,51 @@ const {
   loginValidation,
 } = require('../validations/validations');
 
+const AuthService = require('../services/AuthService');
+
+const AuthServiceInstance = new AuthService();
+
 const register = async (req, res) => {
-  const { error } = registerValidation(req.body);
-  if (error) return res.status(400).send(error.details[0].message);
-
-  const emailExist = await User.findOne({ email: req.body.email });
-  if (emailExist) return res.status(400).send('email already exists');
-
-  const salt = await bcrypt.genSalt(10);
-  const hashedPassword = await bcrypt.hash(req.body.password, salt);
-
-  const user = new User({
-    name: req.body.name,
-    email: req.body.email,
-    password: hashedPassword,
-  });
   try {
-    const savedUser = await user.save();
-
-    res.send({ user: user._id });
+    const result = await AuthServiceInstance.RegisterUser(req.body);
+    if (result) res.status(200).send(result);
   } catch (err) {
     res.status(400).send(err);
   }
 };
 
-const generateAccessToken = (id) => {
-  return jwt.sign({ _id: id }, process.env.ACCESS_TOKEN_SECRET, {
-    expiresIn: '60s',
-  });
-};
-
 const login = async (req, res) => {
-  const { error } = loginValidation(req.body);
-  if (error) return res.status(400).send(error.details[0].message);
+  try {
+    const result = await AuthServiceInstance.LoginUser(req.body);
 
-  const user = await User.findOne({ email: req.body.email });
-  if (!user) return res.status(400).send('email or password is wrong');
-
-  const validPass = await bcrypt.compare(req.body.password, user.password);
-
-  if (!validPass) return res.status(400).send('Invalid password');
-
-  const accessToken = generateAccessToken(user._id);
-
-  const refreshToken = jwt.sign(
-    { _id: user._id },
-    process.env.REFRESH_TOKEN_SECRET
-  );
-  const refreshTokenDb = new RefreshToken({
-    token: refreshToken,
-  });
-  const savedToken = await refreshTokenDb.save();
-  res
-    .header('auth-token', accessToken)
-    .send({ accessToken: accessToken, refreshToken: refreshToken });
+    if (result) {
+      const accessToken = result.accessToken;
+      const refreshToken = result.refreshToken;
+      return res
+        .header('auth-token', accessToken)
+        .send({ accessToken: accessToken, refreshToken: refreshToken });
+    }
+  } catch (err) {
+    res.status(400).send(err);
+  }
 };
 const logout = async (req, res) => {
-  const refreshToken = req.body.refreshtoken;
-  const payload = RefreshToken.deleteOne({ token: refreshToken });
-  res.send('refreshtoken silindi');
+  try {
+    const result = await AuthServiceInstance.LogoutUser(req.body);
+
+    if (result) res.status(200).send(result);
+  } catch (err) {
+    res.status(400).send(err);
+  }
 };
 const refresh = async (req, res) => {
-  const refreshToken = await RefreshToken.findOne({
-    token: req.body.refreshToken,
-  });
+  try {
+    const result = await AuthServiceInstance.Refresh(req.body);
 
-  if (!refreshToken) return res.status(403);
-
-  
-  jwt.verify(
-    refreshToken.token,
-    process.env.REFRESH_TOKEN_SECRET,
-    (err, userId) => {
-      if (err) return console.log(err);
-      const accessToken = generateAccessToken(userId);
-      console.log(accessToken);
-      return res.header('auth-token', accessToken).send({ accessToken });
-    }
-  );
+    if (result) res.status(200).send(result);
+  } catch (err) {
+    res.status(400).send(err);
+  }
 };
 module.exports = {
   register,

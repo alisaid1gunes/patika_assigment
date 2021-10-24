@@ -1,28 +1,32 @@
 class MongooseService {
-    constructor(model) {
-      this.model = model;
-    }
-  
-    save(body) {
-      return this.model.save(body);
-    }
-  
-    getId(id) {
-      return this.model.findOne({ _id: id });
-    }
-  
-    getEmail(email) {
-      return this.model.findOne({ email: email });
-    }
-  
-    delete(id) {
-      return this.model.findOneAndRemove(id);
-    }
-  
-    update(id, value) {
-      return this.model.findOneAndUpdate({ _id: id }, value);
-    }
+  constructor(model) {
+    this.model = model;
   }
-  
-  module.exports = MongooseService;
-  
+
+  save(body) {
+    return this.model.create(body);
+  }
+
+  get(object) {
+    return this.model.findOne(object);
+  }
+
+  getAll() {
+    return this.model.find({});
+  }
+
+  getEmail(email) {
+    return this.model.findOne({ email: email });
+  }
+
+  delete(object) {
+    console.log(object);
+    return this.model.findOneAndDelete(object);
+  }
+
+  update(id, value) {
+    return this.model.findOneAndUpdate({ _id: id }, value);
+  }
+}
+
+module.exports = MongooseService;

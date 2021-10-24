@@ -744,7 +744,14 @@ is-yarn-global@^0.3.0:
   resolved "https://registry.yarnpkg.com/is-yarn-global/-/is-yarn-global-0.3.0.tgz#d502d3382590ea3004893746754c89139973e232"
   integrity sha512-VjSeb/lHmkoyd8ryPVIKvOCn4D1koMqY+vqyjjUfc3xyKtP4dYOxM44sZrnqQSzSds3xyOrUTLTC9LVCVgLngw==
 
-joi@^17.4.2:
+joi-oid@^1.1.2:
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/joi-oid/-/joi-oid-1.1.2.tgz#b21ec4044bb29a5d69dae525cb19cd3c877738d1"
+  integrity sha512-OM639X8cRWcM6lPqtLGIh6/MdxYhv5GjP0ntjm22ZvQ1G5pBOKohGqAXvbvhNjIJ25pcSfAkpldKlgN4euCLzA==
+  dependencies:
+    joi "^17.3.0"
+
+joi@^17.3.0, joi@^17.4.2:
   version "17.4.2"
   resolved "https://registry.yarnpkg.com/joi/-/joi-17.4.2.tgz#02f4eb5cf88e515e614830239379dcbbe28ce7f7"
   integrity sha512-Lm56PP+n0+Z2A2rfRvsfWVDXGEWjXxatPopkQ8qQ5mxCEhwHG+Ettgg5o98FFaxilOxozoa14cFhrE/hOzh/Nw==

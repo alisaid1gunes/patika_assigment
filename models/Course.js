@@ -25,12 +25,6 @@ const courseSchema = new mongoose.Schema({
     type: String,
     require: true,
   },
-  title: {
-    type: String,
-    require: true,
-    min: 3,
-    max: 20,
-  },
   content: [contentSchema],
 });
 

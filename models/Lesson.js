@@ -16,12 +16,6 @@ const LessonSchema = new mongoose.Schema({
     type: String,
     require: true,
   },
-  title: {
-    type: String,
-    require: true,
-    min: 3,
-    max: 20,
-  },
   body: {
     type: String,
     require: true,
