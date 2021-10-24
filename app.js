@@ -10,6 +10,10 @@ const dotenv = require('dotenv');
 
 const cors = require('cors');
 
+const helmet = require('helmet');
+
+const compression = require('compression');
+
 const auth = require('./routes/auth');
 
 const token = require('./routes/token');
@@ -38,6 +42,10 @@ mongoose
 app.use(express.json());
 
 app.use(cors());
+
+app.use(helmet());
+
+app.use(compression({ threshold: 6 }));
 
 app.use('/api/auth', auth);
 
