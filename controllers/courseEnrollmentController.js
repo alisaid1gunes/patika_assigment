@@ -33,6 +33,7 @@ const save = async (req, res) => {
 
 const update = async (req, res) => {
   const id = req.params.id;
+  
   try {
     const result = await CourseEnrollmentServiceInstance.Update(req.body, id);
     res.status(200).json(result);

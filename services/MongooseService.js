@@ -27,6 +27,9 @@ class MongooseService {
   update(id, value) {
     return this.model.findOneAndUpdate({ _id: id }, value);
   }
+  updateWithUser(id, value) {
+    return this.model.findOneAndUpdate({userId: id }, value);
+  }
 }
 
 module.exports = MongooseService;

@@ -1,4 +1,7 @@
 const CourseEnrollment = require('../models/CourseEnrollment');
+
+const Score = require('../models/Score');
+
 const MongooseService = require('./MongooseService');
 
 const {
@@ -9,6 +12,7 @@ const {
 class CourseEnrollmentService {
   constructor() {
     this.mongooseCourseEnrollment = new MongooseService(CourseEnrollment);
+    this.mongooseScore = new MongooseService(Score);
   }
 
   async GetId(id) {
@@ -47,9 +51,26 @@ class CourseEnrollmentService {
     if (error) return error.details[0].message;
     try {
       const result = await this.mongooseCourseEnrollment.save(bodyIn);
-      console.log(result);
+      let score = await this.mongooseScore.get({ userId: bodyIn.userId });
+
+      if (score == null) {
+        score = await this.mongooseScore.save({
+          userId: bodyIn.userId,
+          totalPoints: 0,
+          history: [{ point: 0, date: new Date(), courseId: bodyIn.courseId }],
+        });
+      }
+
+      score.totalPoints += 2;
+      score.history.push({
+        point: 2,
+        date: new Date(),
+        courseId: bodyIn.courseId,
+      });
+      await this.mongooseScore.updateWithUser(bodyIn.userId, score);
+
       if (result) {
-        return 'kayıt yapıldı';
+        return 'kayıt yapıldı 2 puan kazandın';
       } else {
         return 'kayıt yapılamadı';
       }
@@ -63,7 +84,23 @@ class CourseEnrollmentService {
     try {
       const { error } = courseEnrollmentValidationUpdate(bodyIn);
       if (error) return error.details[0].message;
-
+      if ((bodyIn.isCourseCompleted = !null)) {
+        if (bodyIn.isCourseCompleted) {
+          let score = await this.mongooseScore.get({ userId: bodyIn.userId });
+          if (score == null) {
+            score = await this.mongooseScore.save({
+              userId: bodyIn.userId,
+              totalPoints: 0,
+              history: [
+                { point: 0, date: new Date(), courseId: bodyIn.courseId },
+              ],
+            });
+          }
+          console.log(score);
+          score.totalPoints += 10;
+          await this.mongooseScore.updateWithUser(bodyIn.userId, score);
+        }
+      }
       const result = await this.mongooseCourseEnrollment.update(id, bodyIn);
       if (result) return result;
     } catch (err) {
