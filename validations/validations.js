@@ -67,9 +67,42 @@ const lessonValidationUpdate = (data) => {
   return lessonSchema.validate(data);
 };
 
+const courseEnrollmentValidationSave = (data) => {
+  const courseEnrollmentSchema = Joi.object({
+    userId: Joi.objectId().required(),
+    courseId: Joi.objectId().required(),
+    lastVisitedLesson: Joi.objectId().required(),
+    lastCompletedLesson: Joi.objectId().required(),
+    completedLessons: Joi.array()
+      .items({
+        lessonId: Joi.objectId(),
+      })
+      .required(),
+  });
+
+  return courseEnrollmentSchema.validate(data);
+};
+
+const courseEnrollmentValidationUpdate = (data) => {
+  const courseEnrollmentSchema = Joi.object({
+    userId: Joi.objectId(),
+    courseId: Joi.objectId(),
+    lastVisitedLesson: Joi.objectId(),
+    lastCompletedLesson: Joi.objectId(),
+    completedLessons: Joi.array().items({
+      lessonId: Joi.objectId(),
+    }),
+  });
+
+  return courseEnrollmentSchema.validate(data);
+};
+
 module.exports.registerValidation = registerValidation;
 module.exports.loginValidation = loginValidation;
 module.exports.courseValidationSave = courseValidationSave;
 module.exports.courseValidationUpdate = courseValidationUpdate;
 module.exports.lessonValidationSave = lessonValidationSave;
 module.exports.lessonValidationUpdate = lessonValidationUpdate;
+module.exports.courseEnrollmentValidationSave = courseEnrollmentValidationSave;
+module.exports.courseEnrollmentValidationUpdate =
+  courseEnrollmentValidationUpdate;
